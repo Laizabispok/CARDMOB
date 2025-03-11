@@ -41,7 +41,7 @@ function App() {
   // function updateCount() {
 const updateCount1 = () => count + 1; //return é implicito
 
-// const dados = {
+
 //   "nome": "fulano",
 //   "atualiza":(novo_nome) => `Meu nome é ${novo_nome}`,
 //   "endereco": {
