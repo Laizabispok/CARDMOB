@@ -1,0 +1,40 @@
+.album-title {
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #fff;
+}
+
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* corrigida */
+    gap: 16px;
+    padding: 20px;
+}
+
+
+.album-title {
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #000; /* corrigido */
+}
+
+
+.album-item img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    object-fit: cover;
+    margin-bottom: 10px;
+}
+
+
+.album-item h2 {
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
+}
