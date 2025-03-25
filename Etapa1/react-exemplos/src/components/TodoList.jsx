@@ -41,6 +41,12 @@ const TodoList = ({ name }) => {
         setTodo(todos.filter((todo) => todo.id !== id));
     }
 
+    // Cancel editing
+    const cancelEditing = () => {
+        setEditingId(null);
+        setEditingText("");
+    }
+
     return (
         <div style={{textAlign: "center", marginTop: "50px"}}>
             <h2>A fazer: {name}</h2>
@@ -61,7 +67,8 @@ const TodoList = ({ name }) => {
                                 value={editingText}
                                 onChange={(event) => setEditingText(event.target.value)}  
                                 />    
-                                <button onClick={saveEdit}>Salvar</button>                         
+                                <button onClick={saveEdit}>Salvar</button>     
+                                <a href="#" onClick={cancelEditing}>Cancelar</a>                    
                             </>
                         ): (
                             <>
