@@ -37,10 +37,33 @@ const styles = StyleSheet.create({
         shadowRadius: 3,
         elevation: 3,
     },
-    image: {},
-    details: {},
-    name: {},
-    description: {},
-    price: {},
-    buttonsContainer: {}
+
+    image: {
+        width: '100%',
+        height: 200,
+        borderRadius: 8,
+        borderWidth: 2,
+        borderColor: '#ddd',
+    },
+    details: {
+        paddingHorizontal: 10,
+    },
+    name: {
+        fontSize: 18,
+        fontWeight: 'bold',
+    },
+    description: {
+        fontSize: 14,
+        color: '#555',
+    },
+    price: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        color: '#28A745',
+        marginVertical: 10,
+    },
+    buttonsContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+    }
 });
