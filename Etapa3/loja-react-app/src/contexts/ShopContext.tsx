@@ -1,42 +1,53 @@
 import React, { createContext, useContext, useState } from "react";
 
-type ShopContextType = {
-    cartItems: any[];
-    addToCart: (item: any) => Promise<void>;
+type CartItem = {
+  id: number;
+  name: string;
+  price: number;
+  image: string;
+  quantity: number;
 };
 
-export const ShopContext = createContext<ShopContextType>({} as ShopContextType);
+type ShopContextType = {
+  cartItems: CartItem[];
+  addToCart: (item: CartItem, quantity?: number) => void;
+  removeFromCart: (id: number) => void;
+};
 
-export const ShopProvider: React.FC<{ children: React.ReactNode}> = ({ children}) => {
-    const [cartItems, setCartItems] = useState<any[]>([]);
+const ShopContext = createContext<ShopContextType | undefined>(undefined);
 
-    const addToCart = async (item: any, quantity: number = 1) => {
-        setCartItems(prevItems => {
-                const existingIndex = prevItems.findIndex(
-                    cartItem => cartItem.id === item.id
-                );
-                if (existingIndex >= 0) {
-                    const updatedItems = [...prevItems];
-                    if (updatedItems[existingIndex].quantity + quantity > 0) {
-                        updatedItems[existingIndex].quantity += quantity;
-                    }
-                    return updatedItems;
-                }
-                else {
-                    return [...prevItems, {...item, quantity}];
-                }
+export const ShopProvider = ({ children }: { children: React.ReactNode }) => {
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
 
-            }
-        )
-    }
+  const addToCart = (item: CartItem, quantity: number = 1) => {
+    setCartItems((prev) => {
+      const existing = prev.find((p) => p.id === item.id);
+      if (existing) {
+        return prev.map((p) =>
+          p.id === item.id
+            ? { ...p, quantity: p.quantity + quantity }
+            : p
+        );
+      }
+      return [...prev, { ...item, quantity }];
+    });
+  };
 
-    return (
-        <ShopContext
-            value={ { cartItems, addToCart } }
-        >
-            {children}
-        </ShopContext>
-    );
-}
+  const removeFromCart = (id: number) => {
+    setCartItems((prev) => prev.filter((p) => p.id !== id));
+  };
 
-export const useShop = () => useContext(ShopContext);
+  return (
+    <ShopContext.Provider value={{ cartItems, addToCart, removeFromCart }}>
+      {children}
+    </ShopContext.Provider>
+  );
+};
+
+export const useShop = () => {
+  const context = useContext(ShopContext);
+  if (!context) {
+    throw new Error("useShop deve ser usado dentro de um ShopProvider");
+  }
+  return context;
+};
