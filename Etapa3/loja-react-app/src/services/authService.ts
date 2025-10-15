@@ -1,4 +1,4 @@
-import Constants from 'expo-constants';
+import Constants from 'expo-constants'; 
 
 
 const { apiUrl } = Constants.expoConfig?.extra || {}; 
@@ -11,7 +11,7 @@ export async function fakeLogin(email: string, password: string): Promise<string
 }
 
 export async function requestLogin(email: string, password: string): Promise<string> {
-    console.log(apiUrl);
+    console.log(apiUrl); 
     try {
         
         const response = await fetch(`${apiUrl}/api/users/login`, {
@@ -20,6 +20,28 @@ export async function requestLogin(email: string, password: string): Promise<str
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({email, password}),
+        });
+        const data = await response.json();
+        const jwt = data.accessToken;
+        console.log(jwt);
+        return Promise.resolve(jwt);
+    }
+    catch (error) {
+        console.error(error);
+        return Promise.reject(error);
+      
+    }
+}
+
+
+export async function requestRegister(name: string, email: string, password: string): Promise<string> {
+    try {
+        const response = await fetch(`${apiUrl}/api/users`, { 
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({name, email, password}),
         });
         const data = await response.json();
         const jwt = data.accessToken;

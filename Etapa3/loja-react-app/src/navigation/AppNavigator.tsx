@@ -1,14 +1,11 @@
 import React from "react";
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 
 import { RootStackParamList, TabParamList } from './types';
 
-
 import HomeScreen from "../screens/HomeScreen";
-
 import RegisterScreen from "../screens/RegisterScreen";
 import LoginScreen from "../screens/LoginScreen";
 import CatalogScreen from "../screens/catalog/CatalogScreen";
@@ -21,13 +18,17 @@ function TabNavigator() {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
-        tabBarIcon: ({ color, focused, size }) => {
-          let iconName: any;
+        tabBarIcon: ({ color, size, focused }) => {
+          let iconName: keyof typeof FontAwesome.glyphMap = "circle";
 
           if (route.name === "Catalog") {
-            iconName = focused ? "tags" : "tags";
+            iconName = "tags";
           } else if (route.name === "Cart") {
-            iconName = focused ? "shopping-cart" : "shopping-cart";
+            iconName = "shopping-cart";
+          } else if (route.name === "Settings") {
+            iconName = "cog";
+          } else if (route.name === "Register") {
+            iconName = "user-plus";
           }
 
           return <FontAwesome name={iconName} size={size} color={color} />;
@@ -55,7 +56,7 @@ function TabNavigator() {
       <Tab.Screen
         name="Register"
         component={RegisterScreen}
-        options={{ title: "Registrar" }}
+        options={{ title: "Cadastrar", headerShown: true }}
       />
     </Tab.Navigator>
   );
