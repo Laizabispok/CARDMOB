@@ -1,11 +1,13 @@
 import React from "react";
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
 
-import { RootStackParamList, TabParamList } from './types';
+import { RootStackParamList, TabParamList } from "./types";
 
+// Telas do app - área não logada.
 import HomeScreen from "../screens/HomeScreen";
+// importar depois que implementar: DetailsScreen, SettingsScreen
 import RegisterScreen from "../screens/RegisterScreen";
 import LoginScreen from "../screens/LoginScreen";
 import CatalogScreen from "../screens/catalog/CatalogScreen";
@@ -18,8 +20,8 @@ function TabNavigator() {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
-        tabBarIcon: ({ color, size, focused }) => {
-          let iconName: keyof typeof FontAwesome.glyphMap = "circle";
+        tabBarIcon: ({ color, focused, size }) => {
+          let iconName: keyof typeof FontAwesome.glyphMap = "circle"; // valor padrão
 
           if (route.name === "Catalog") {
             iconName = "tags";
@@ -27,8 +29,6 @@ function TabNavigator() {
             iconName = "shopping-cart";
           } else if (route.name === "Settings") {
             iconName = "cog";
-          } else if (route.name === "Register") {
-            iconName = "user-plus";
           }
 
           return <FontAwesome name={iconName} size={size} color={color} />;
@@ -46,12 +46,12 @@ function TabNavigator() {
       <Tab.Screen
         name="Cart"
         component={CartScreen}
-        options={{ title: "Seu Carrinho" }}
+        options={{ title: "Seu Carrinho", headerShown: true }}
       />
       <Tab.Screen
         name="Settings"
         component={HomeScreen}
-        options={{ title: "Configurações" }}
+        options={{ title: "Configurações", headerShown: true }}
       />
       <Tab.Screen
         name="Register"

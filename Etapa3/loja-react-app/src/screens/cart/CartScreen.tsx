@@ -2,44 +2,43 @@ import React from 'react';
 import { View, Text, FlatList, StyleSheet, Button, TouchableOpacity } from 'react-native';
 
 import CartItem from './CartItem';
-
 import { useShop } from '../../contexts/ShopContext';
 
 const CartScreen = ({ navigation }: any) => {
-    const { cartItems } = useShop();
+    const { cartItems, getTotalPrice, clearCart } = useShop();
 
-    const renderItem = ({item} : any) => (
+    const renderItem = ({ item }: any) => (
         <CartItem item={item} />
     );
 
     const handleCheckout = () => {
         console.log('Concluindo a compra');
-    }
+    };
 
     return (
         <View style={styles.container}>
             {cartItems.length === 0 ? (
                 <View style={styles.container}>
                     <Text style={styles.empty}>Seu carrinho está vazio.</Text>
-                    <Button 
-                        title='Ver produtos'
-                        onPress={ () => navigation.navigate('Catalog') }
+                    <Button
+                        title="Ver produtos"
+                        onPress={() => navigation.navigate('Catalog')}
                     />
                 </View>
             ) : (
                 <View style={styles.listContainer}>
-                    {/* <Text>Carrinho de compras</Text> */}
-                    <FlatList 
+                    <FlatList
                         data={cartItems}
                         renderItem={renderItem}
                         keyExtractor={(item: any) => item.id.toString()}
                     />
                     <View style={styles.totalContainer}>
-                        {/* aqui estava o erro, estava {handleCheckout}, mudei pra valor fixo */}
-                        <Text style={styles.totalText}>Total R$ 0.00</Text>
-                        
+                        <Text style={styles.totalText}>
+                            Total R$ {getTotalPrice().toString()}
+                        </Text>
+
                         <TouchableOpacity
-                            onPress={handleCheckout}
+                            onPress={clearCart}
                             style={styles.clearButton}
                         >
                             <Text style={styles.clearButtonText}>Limpar carrinho</Text>
@@ -53,18 +52,18 @@ const CartScreen = ({ navigation }: any) => {
                         </TouchableOpacity>
 
                         <TouchableOpacity
-                            onPress={() => navigation.navigate('Catalog')}
+                            onPress={handleCheckout}
                             style={styles.checkoutButton}
                         >
                             <Text style={styles.checkoutButtonText}>Concluir Pedido</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
-            )
-            }
+            )}
         </View>
     );
 };
+
 export default CartScreen;
 
 const styles = StyleSheet.create({
