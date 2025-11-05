@@ -12,6 +12,7 @@ import RegisterScreen from "../screens/RegisterScreen";
 import LoginScreen from "../screens/LoginScreen";
 import CatalogScreen from "../screens/catalog/CatalogScreen";
 import CartScreen from "../screens/cart/CartScreen";
+import CheckoutScreen from "../screens/cart/CheckoutScreen";
 
 const AppStack = createNativeStackNavigator<RootStackParamList>();
 const Tab = createBottomTabNavigator<TabParamList>();
@@ -21,7 +22,7 @@ function TabNavigator() {
     <Tab.Navigator
       screenOptions={({ route }) => ({
         tabBarIcon: ({ color, focused, size }) => {
-          let iconName: keyof typeof FontAwesome.glyphMap = "circle"; // valor padrão
+          let iconName: keyof typeof FontAwesome.glyphMap = "circle"; // valor padrão para evitar erro
 
           if (route.name === "Catalog") {
             iconName = "tags";
@@ -79,6 +80,11 @@ function StackNavigator() {
         name="Login"
         component={LoginScreen}
         options={{ title: "Acessar" }}
+      />
+      <AppStack.Screen
+        name="Checkout"
+        component={CheckoutScreen}
+        options={{ title: "Concluir pedido" }}
       />
     </AppStack.Navigator>
   );
