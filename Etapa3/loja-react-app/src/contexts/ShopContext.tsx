@@ -3,15 +3,18 @@ import React, { createContext, useContext, useState } from "react";
 type ShopContextType = {
     cartItems: any[];
     addToCart: (item: any, quantity?: number) => Promise<void>;
-    removeFromCart: (itemId: number) => Promise<void>;
-    getTotalPrice: () => number;
+    removeFromCart: (itemId: number) => void;
+    getTotalPrice: () => string;
     clearCart: () => void;
+    lastOrderInfo: (orderInfo: any) => void;
+    orderInfo: any;
 };
 
 export const ShopContext = createContext<ShopContextType>({} as ShopContextType);
 
 export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [cartItems, setCartItems] = useState<any[]>([]);
+    const [orderInfo, setOrderInfo] = useState<any>(null);
 
     const addToCart = async (item: any, quantity: number = 1) => {
         setCartItems(prevItems => {
@@ -30,27 +33,37 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
         });
     };
 
-    const removeFromCart = async (itemId: number) => {
+    const removeFromCart = (itemId: number) => {
         setCartItems(prevItems =>
             prevItems.filter(item => item.id !== itemId)
         );
     };
 
     const getTotalPrice = () => {
-        const total = cartItems.reduce(
-            (sum, item) => sum + item.price * item.quantity,
-            0
-        );
-        return Number(total.toFixed(2));
+        return cartItems
+            .reduce((total, item) => total + item.price * item.quantity, 0)
+            .toFixed(2);
     };
 
     const clearCart = () => {
         setCartItems([]);
     };
 
+    const lastOrderInfo = (info: any) => {
+        setOrderInfo(info);
+    };
+
     return (
         <ShopContext.Provider
-            value={{ cartItems, addToCart, removeFromCart, getTotalPrice, clearCart }}
+            value={{
+                cartItems,
+                addToCart,
+                removeFromCart,
+                getTotalPrice,
+                clearCart,
+                orderInfo,
+                lastOrderInfo
+            }}
         >
             {children}
         </ShopContext.Provider>
