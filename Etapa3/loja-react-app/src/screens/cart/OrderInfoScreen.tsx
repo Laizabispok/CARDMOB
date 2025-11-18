@@ -1,38 +1,38 @@
-import React, { useState, useEffect } from "react";
-import { View, Text, Image, StyleSheet, FlatList } from "react-native";
+import React, { useContext, useState, useEffect } from "react";
+import { View, Text, Image, StyleSheet, FlatList} from 'react-native';
+
+import Constants from 'expo-constants';  // novo
+
 import { useShop } from "../../contexts/ShopContext";
 
-const OrderInfoScreen = ({ navigation }: any) => {
+const OrderInfoScreen = ({navigation}: any) => {
     const { orderInfo } = useShop();
-    const [orderData, setOrderData] = useState<any[]>([]);
+    const [orderData, setOrderData ] = useState<any[]>([]);
+    const { apiUrl } = Constants.expoConfig?.extra || {}; // novo
 
     const loadOrder = () => {
         console.log(orderInfo);
-
-        if (orderInfo && orderInfo.id) {
+        if (orderInfo.id) {
             const lastOrder = [
-                { label: "Status", value: orderInfo.status, isStatus: true },
-                { label: "Nome", value: orderInfo.customerName },
-                { label: "Endereço de entrega", value: orderInfo.customerAddress },
-                { label: "Total", value: `R$ ${orderInfo.totalPrice?.toFixed(2) || "0.00"}` },
-                ...(orderInfo.orderOffering?.map((item: any) => ({
+                {label: '', value: orderInfo.status, isStatus: true},
+                {label: 'Nome', value: orderInfo.customerName},
+                {label: 'Endereço de entrega', value: orderInfo.customerAddress},
+                {label: 'Total', value: `R$ ${orderInfo.totalPrice.toFixed(2)}`},
+                ...orderInfo.orderOffering.map((item: any) => ({
                     label: item.offering.name,
-                    value: `x${item.quantity} - subtotal: R$ ${item.subtotal?.toFixed(2) || "0.00"}`,
-                    image: item.offering.image,
+                    value: `x${item.quantity} - subtotal: R$ ${item.subtotal.toFixed(2)}`,
+                    image: `${apiUrl}/${item.offering.image}`,
                     isOrderItem: true,
-                })) || []),
+                }))
             ];
             setOrderData(lastOrder);
-        } else {
-            setOrderData([]);
         }
-    };
-
+    }
     useEffect(() => {
         loadOrder();
-    }, [orderInfo]);
+    }, []);
 
-    const renderItem = ({ item }: any) => {
+    const renderItem = ({item}: any) => {
         if (item.isOrderItem) {
             return (
                 <View style={styles.itemRow}>
@@ -48,78 +48,87 @@ const OrderInfoScreen = ({ navigation }: any) => {
 
         return (
             <View style={styles.infoRow}>
-                {!!item.label && <Text style={styles.label}>{item.label}</Text>}
-                <Text style={styles.value}>{item.value}</Text>
+                <Text style={styles.label}>
+                    {item.label}
+                </Text>
+                <Text style={item.isStatus ? styles.statusValue : styles.value}>{item.value}</Text>
             </View>
         );
-    };
+    }
 
-    return (
+    return ( 
         <View style={styles.container}>
-            {orderInfo && orderInfo.id ? (
-                <View>
-                    <Text style={styles.title}>Nº {orderInfo.id}</Text>
-                    <FlatList
+            {orderInfo.id ? (
+                <View> 
+                    <Text style={styles.title}>
+                        Nº {orderInfo.id}
+                    </Text>
+                    <FlatList 
                         data={orderData}
                         renderItem={renderItem}
-                        keyExtractor={(_, index) => index.toString()}
-                        contentContainerStyle={styles.listContainer}
+                        keyExtractor={(item: any, index: number) => index.toString()}
+                        contentContainerStyle={styles.container}
                     />
                 </View>
             ) : (
                 <View style={styles.infoRow}>
-                    <Text style={styles.title}>Nenhum pedido encontrado.</Text>
+                    <Text style={styles.title}>
+                        Nenhum pedido encontrado.
+                    </Text>
                 </View>
             )}
         </View>
     );
-};
-
+}
 export default OrderInfoScreen;
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        backgroundColor: "#fff",
         padding: 16,
-    },
-    listContainer: {
-        paddingBottom: 20,
+        backgroundColor: '#fff',
     },
     itemRow: {
-        flexDirection: "row",
-        alignItems: "center",
-        marginVertical: 8,
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginVertical: 4,
+        paddingVertical: 8,
+        borderBottomWidth: 1,
+        borderColor: '#ddd',
     },
     itemImage: {
-        height: 80,
-        width: 80,
+        width: 60,
+        height: 60,
         borderRadius: 8,
-        marginRight: 12,
+        marginRight: 10,
     },
     itemInfo: {
         flex: 1,
     },
     itemName: {
-        fontSize: 16,
-        color: "#333",
+        fontWeight: 'bold'
     },
     infoRow: {
-        marginVertical: 6,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginBottom: 4,
+        paddingVertical: 4
     },
     label: {
-        fontWeight: "bold",
-        fontSize: 14,
-        color: "#555",
+        fontWeight: 'bold',
     },
-    value: {
-        fontSize: 14,
-        color: "#333",
-    },
+    value: {},
     title: {
-        fontSize: 20,
-        fontWeight: "bold",
+        fontSize: 22,
+        fontWeight: 'bold',
         marginBottom: 12,
-        color: "#000",
+    },
+    statusValue: {
+        flex: 1,
+        textAlign: 'left',
+        fontWeight: 'bold',
+        color: 'orange',
+        backgroundColor: '#fff3cd',
+        padding: 4,
+        borderRadius: 5,
     },
 });
