@@ -1,6 +1,5 @@
 import Constants from 'expo-constants'; 
 
-
 const { apiUrl } = Constants.expoConfig?.extra || {}; 
 
 export async function fakeLogin(email: string, password: string): Promise<string> {
@@ -12,8 +11,7 @@ export async function fakeLogin(email: string, password: string): Promise<string
 
 export async function requestLogin(email: string, password: string): Promise<string> {
     console.log(apiUrl); 
-    try {
-        
+      
         const response = await fetch(`${apiUrl}/api/users/login`, {
             method: 'POST',
             headers: {
@@ -29,8 +27,7 @@ export async function requestLogin(email: string, password: string): Promise<str
     catch (error) {
         console.error(error);
         return Promise.reject(error);
-      
-    }
+       
 }
 
 
@@ -41,7 +38,7 @@ export async function requestRegister(name: string, email: string, password: str
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({name, email, password}),
+            body: JSON.stringify({name, email, password}), 
         });
         const data = await response.json();
         const jwt = data.accessToken;
@@ -51,6 +48,21 @@ export async function requestRegister(name: string, email: string, password: str
     catch (error) {
         console.error(error);
         return Promise.reject(error);
+      
+    }
+}
 
+export async function getTokenData(token: string | null): Promise<any[]> {
+    try {
+        if (!token) {
+            return [];
+        }
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const payload = JSON.parse(atob(base64));
+        return payload;
+    } catch (error) {
+        console.error(error);
+        return Promise.reject('Token inválido.');
     }
 }
