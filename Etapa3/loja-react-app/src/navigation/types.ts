@@ -18,6 +18,7 @@ export type RootStackParamList = {
 export type AuthTabParamList = {
   Home: undefined;
   Settings: undefined;
+  Orders: undefined;
 }
 
 export type AuthStackParamList = {
