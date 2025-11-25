@@ -4,19 +4,19 @@ import { View, Text, Button, StyleSheet, Image } from "react-native";
 import { useTheme } from '../../contexts/ThemeContext';
 import { useAuth } from '../../contexts/AuthContext';
 
-import { requestProfileById } from "../../services/profileService"; 
+import { requestProfileById } from "../../services/profileService";  
 
 function ProfileScreen({ navigation }: any) {
     const { theme, toggleTheme } = useTheme();
     const { logout, userData } = useAuth();
     const [user, setUser] = useState({}); 
 
-    
+    // novo
     useEffect(() => {
         const fetchProfile = async () => {
             try {
                 console.log(userData); 
-                const user = await requestProfileById(1);
+                const user = await requestProfileById(userData?.id);
                 console.log(user);
                 setUser(user);
                 console.log('Carregou o usuário!');
@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
-    image: {
+    image: { 
         height: 100,
         width: 100,
     },
