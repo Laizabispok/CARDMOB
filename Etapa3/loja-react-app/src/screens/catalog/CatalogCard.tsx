@@ -1,7 +1,13 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { View, Text, Image, StyleSheet, Button } from 'react-native';
 
+import { useShop } from '../../contexts/ShopContext';
+import { useAuth } from '../../contexts/AuthContext';
+
 const CatalogCard = ({product, onBuyPress}: any) => {
+    const { pickImage }= useShop();
+    const { userData } = useAuth();
+
     return (
         <View style={styles.card}>
             <Image  
@@ -18,6 +24,14 @@ const CatalogCard = ({product, onBuyPress}: any) => {
                             color="#28A745"
                             onPress={onBuyPress}
                         />
+                        {userData.is_admin ? (
+                                <Button 
+                                    title="Editar"
+                                    color="#007BFF"
+                                    onPress={() => pickImage()}
+                                />
+                            ) : null
+                        }
                 </View>
             </View>
         </View>
@@ -37,7 +51,6 @@ const styles = StyleSheet.create({
         shadowRadius: 3,
         elevation: 3,
     },
-
     image: {
         width: '100%',
         height: 200,
