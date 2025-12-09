@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { View, Text, Image, StyleSheet, Button } from 'react-native';
 
 import { useShop } from '../../contexts/ShopContext';
@@ -7,13 +7,24 @@ import { useAuth } from '../../contexts/AuthContext';
 const CatalogCard = ({product, onBuyPress}: any) => {
     const { pickImage }= useShop();
     const { userData } = useAuth();
+    const [updatedImage, setUpdatedImage] = useState(product.image)
+
+    const updateImage = async () => {
+        const loadedImage = await pickImage();
+        if (loadedImage) setUpdatedImage(loadedImage);
+    }
 
     return (
         <View style={styles.card}>
             <Image  
-                source={{ uri: product.image }}
+                source={
+                    updatedImage
+                        ? { uri: updatedImage }
+                        : { uri: product.image }
+                }
                 style={styles.image}
             />
+            
             <View style={styles.details}>
                 <Text style={styles.name}>{product.name}</Text>
                 <Text style={styles.description}>{product.description}</Text>
@@ -28,7 +39,7 @@ const CatalogCard = ({product, onBuyPress}: any) => {
                                 <Button 
                                     title="Editar"
                                     color="#007BFF"
-                                    onPress={() => pickImage()}
+                                    onPress={updateImage}
                                 />
                             ) : null
                         }
